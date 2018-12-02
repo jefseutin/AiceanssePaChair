@@ -1,6 +1,8 @@
 # Don't track content of these folders
 RemoteSystemsTempFiles/
 
+/essenceapi/target
+
 # Compiled source #
 ###################
 *.com
@@ -26,4 +28,3 @@ RemoteSystemsTempFiles/
 *.jar
 *.rar
 *.tar
-*.zip
