@@ -1,9 +1,16 @@
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoClient;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.MongoIterable;
+import com.mongodb.client.model.Filters;
 import org.bson.Document;
+
+import static com.mongodb.client.model.Projections.excludeId;
+import static com.mongodb.client.model.Projections.fields;
+import static com.mongodb.client.model.Projections.include;
 
 public class DatabaseRequest {
 
@@ -15,6 +22,15 @@ public class DatabaseRequest {
 
         MongoClient mongoClient = new MongoClient();
         db = mongoClient.getDatabase("essence");
+    }
+
+    private String documentsToJson(MongoIterable<Document> documents) {
+        StringBuilder str = new StringBuilder("[");
+        if (documents.first() == null)
+            return "[]";
+        for (Document d : documents)
+            str.append(d.toJson()).append(",");
+        return str.deleteCharAt(str.length() - 1).append("]").toString();
     }
 
     public String add(String collectionName, Object object) {
@@ -30,5 +46,15 @@ public class DatabaseRequest {
         }
         return null;
     }
+
+
+    public String getClosestStations(double longitude, double latitude) {
+        FindIterable<Document> stations = db.getCollection("station")
+                .find(Filters.geoWithinCenterSphere("location", longitude, latitude, 5 / 6371.0))
+                .projection(fields(include("city"), excludeId()));
+
+        return documentsToJson(stations);
+    }
+
 
 }
