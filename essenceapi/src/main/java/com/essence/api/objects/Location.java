@@ -1,4 +1,4 @@
-package object;
+package com.essence.api.objects;
 
 public class Location {
 
@@ -24,5 +24,13 @@ public class Location {
 
     public void setCoordinates(double[] coordinates) {
         this.coordinates = coordinates;
+    }
+
+    public double getLongitude() {
+        return coordinates[0];
+    }
+
+    public double getLatitude() {
+        return coordinates[0];
     }
 }

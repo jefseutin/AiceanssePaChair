@@ -1,16 +1,12 @@
-package object;
-
-import javafx.util.Pair;
+package com.essence.api.objects;
 
 import java.util.Map;
-import java.util.Map.Entry;
 
 public class Station {
 
     private int id, zipcode;
     private String city, address;
     private Map<String, String> fuels;
-
     private Location location;
 
     public Station() {

@@ -1,5 +1,7 @@
-import object.Location;
-import object.Station;
+package com.essence.api;
+
+import com.essence.api.objects.Location;
+import com.essence.api.objects.Station;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
