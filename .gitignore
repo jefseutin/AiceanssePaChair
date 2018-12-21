@@ -17,7 +17,7 @@ RemoteSystemsTempFiles/
 #################
 .metadata
 .settings
-.idea
+essenceapi/.idea
 
 # Packages #
 ############
