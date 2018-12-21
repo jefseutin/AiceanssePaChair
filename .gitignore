@@ -12,10 +12,12 @@ RemoteSystemsTempFiles/
 *.dll
 *.so
 
+
 # Metadata file #
 #################
 .metadata
 .settings
+.idea
 
 # Packages #
 ############
