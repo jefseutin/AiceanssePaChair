@@ -10,9 +10,7 @@ import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
 
-import static com.mongodb.client.model.Projections.excludeId;
-import static com.mongodb.client.model.Projections.fields;
-import static com.mongodb.client.model.Projections.include;
+import static com.mongodb.client.model.Projections.*;
 
 public class DatabaseRequest {
 
@@ -53,7 +51,7 @@ public class DatabaseRequest {
     public String getClosestStations(double longitude, double latitude) {
         FindIterable<Document> stations = db.getCollection("station")
                 .find(Filters.geoWithinCenterSphere("location", longitude, latitude, 5 / 6371.0))
-                .projection(fields(include("city"), excludeId()));
+                .projection(fields(excludeId()));
 
         return documentsToJson(stations);
     }

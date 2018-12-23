@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { apiRequest } from '../api';
+import CustomMap from './CustomMap';
 
 export default class Home extends Component {
 
@@ -15,8 +16,8 @@ export default class Home extends Component {
     componentDidMount(props) {
         navigator.geolocation.getCurrentPosition(
             position => {
-                this.setState({ location: [position.coords.longitude, position.coords.latitude] });
-                let p = this.state.location[0] + '/' + this.state.location[1];
+                this.setState({ location: [position.coords.latitude, position.coords.longitude] });
+                let p = this.state.location[1] + '/' + this.state.location[0];
                 apiRequest('station/nearest', 'GET', p, response => {
                     console.log(response)
                     this.setState({
@@ -30,11 +31,18 @@ export default class Home extends Component {
     }
 
     render() {
+
         return (
             <div>
-                <p>Longitude: {this.state.location[0]}</p>
-                <p>Latitude: {this.state.location[1]}</p>
-                <p>Stations autour de vous : {this.state.stations.length}</p>
+                <div>
+                    <p>Latitude: {this.state.location[0]}</p>
+                    <p>Longitude: {this.state.location[1]}</p>
+                    <p>Stations autour de vous : {this.state.stations.length}</p>
+                </div>
+                {
+                    this.state.stations.length > 0 &&
+                    <CustomMap position={this.state.location} stations={this.state.stations}/>
+                }
             </div>
         );
     }
