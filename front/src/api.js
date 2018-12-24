@@ -9,7 +9,7 @@ export function parseFormToJson(formdata) {
 }
 
 export const apiRequest = (action, method, data, f) => {
-    let url = apiUrl + action;
+    let url = action !== 'distance' ? (apiUrl + action) : 'https://dev.virtualearth.net/REST/v1/Routes';
     let body;
 
     if (method === 'GET' || method === 'DELETE') {

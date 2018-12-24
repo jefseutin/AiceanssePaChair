@@ -4,27 +4,20 @@ import Leaflet from 'leaflet'
 
 export default class CustomMap extends Component {
 
-    constructor(props) {
-        super(props);
-    }
-
-
     render() {
 
         let markers = this.props.stations.map(station => {
             return (
-                <Marker position={station.location.coordinates.reverse()} icon={this.customPin('#2196F3')}>
+                <Marker key={station.id} position={station.location.coordinates.reverse()} icon={this.customPin('#2196F3')}>
                     <Popup>{station.address}</Popup>
                 </Marker>
             );
         });
 
+
         return (
-            <div
-                style={{
-                    height: "700px"
-                }}>
-                <Map center={this.props.position} zoom={12} style={{ height: "700px" }}>
+            <div align="center">
+                <Map center={this.props.position} zoom={12} style={{ height: "500px" }}>
 
                     <TileLayer
                         url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
