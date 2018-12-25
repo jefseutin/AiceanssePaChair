@@ -50,8 +50,9 @@ public class DatabaseRequest {
 
     public String getClosestStations(double longitude, double latitude) {
         FindIterable<Document> stations = db.getCollection("station")
-                .find(Filters.geoWithinCenterSphere("location", longitude, latitude, 5 / 6371.0))
-                .projection(fields(excludeId()));
+                .find(Filters.and(Filters.geoWithinCenterSphere("location", longitude, latitude, 5 / 6371.0)))
+                .projection(fields(excludeId()))
+                .limit(10);
 
         return documentsToJson(stations);
     }

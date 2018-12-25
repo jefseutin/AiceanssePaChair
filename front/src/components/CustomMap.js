@@ -8,7 +8,7 @@ export default class CustomMap extends Component {
 
         let markers = this.props.stations.map(station => {
             return (
-                <Marker key={station.id} position={station.location.coordinates.reverse()} icon={this.customPin('#2196F3')}>
+                <Marker key={station.id} position={station.location.coordinates} icon={this.customPin('#2196F3')}>
                     <Popup>{station.address}</Popup>
                 </Marker>
             );

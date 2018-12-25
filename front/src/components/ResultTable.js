@@ -11,9 +11,8 @@ export default class ResultTable extends Component {
             return (
                 <tr key={station.id}>
                     <th scope="row">{k++}</th>
-                    <td>{station.city}</td>
-                    <td>{station.address}</td>
-                    <td>{station.fuels.Gazole/1000}€</td>
+                    <td>{station.address}<br/>{station.city}</td>
+                    <td>{station.fuels.Gazole}€</td>
                     <td>{station.distance} km</td>
                 </tr>
             );
@@ -21,11 +20,10 @@ export default class ResultTable extends Component {
 
         return (
             <div>
-                <Table hover>
+                <Table hover striped>
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Ville</th>
                             <th>Adresse</th>
                             <th>Prix</th>
                             <th>Distance</th>

@@ -13,23 +13,34 @@ export default class Home extends Component {
         };
     }
 
+    sortByKey(array, key) {
+        return array.sort(function(a, b) {
+            var x = a[key]; var y = b[key];
+            return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+        });
+    }
+
     componentDidMount(props) {
         navigator.geolocation.getCurrentPosition(
             position => {
                 this.setState({ location: [position.coords.latitude, position.coords.longitude] });
                 let p = this.state.location[1] + '/' + this.state.location[0];
                 apiRequest('station/nearest', 'GET', p, response => {
+                    response.forEach(station => station.location.coordinates.reverse());
+                    this.sortByKey(response, 'price');
+                    response.reverse();
 
                     let ltd = this.state.location[0], lng = this.state.location[1];
-                    let k = 5;
-                    response.slice(0, 5).forEach(station => {
-                        let data = `DistanceMatrix?origins=${ltd},${lng}&destinations=${station.location.coordinates.reverse()}&travelMode=driving&key=AvIF_IWuz6PuSbpY35CGEFE7JIzegMdb4j0XbZURfXkJZGACLZjVPrPwXZQNlOGP`;
+                    let k = 10;
+                    response.forEach(station => {
+                        let data = `DistanceMatrix?origins=${ltd},${lng}&destinations=${station.location.coordinates}&travelMode=driving&key=AvIF_IWuz6PuSbpY35CGEFE7JIzegMdb4j0XbZURfXkJZGACLZjVPrPwXZQNlOGP`;
                         apiRequest('distance', 'GET', data, res => {
                             station['distance'] = Number(res.resourceSets[0].resources[0].results[0].travelDistance).toFixed(2);
-                            if (--k === 0)
+                            if (--k === 0) {
                                 this.setState({
                                     stations: response
                                 });
+                            }
                         });
                     });
                 });
@@ -52,10 +63,10 @@ export default class Home extends Component {
                     this.state.stations.length > 0 &&
                     <div className="row col-md-10 offset-md-1">
                         <div className="col-md-6" >
-                            <CustomMap position={this.state.location} stations={this.state.stations} />
+                            <ResultTable stations={this.state.stations} />
                         </div>
                         <div className="col-md-6">
-                            <ResultTable stations={this.state.stations.slice(0, 5)} />
+                            <CustomMap position={this.state.location} stations={this.state.stations} />
                         </div>
                     </div>
                 }
