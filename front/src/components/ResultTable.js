@@ -14,6 +14,9 @@ export default class ResultTable extends Component {
                     <td>{station.address}<br/>{station.city}</td>
                     <td>{station.fuels.Gazole}€</td>
                     <td>{station.distance} km</td>
+                    <td>{station.fullPrice}€</td>
+                    <td>{station.tripPrice}€</td>
+                    <td>{station.totalCost}€</td>
                 </tr>
             );
         });
@@ -27,6 +30,9 @@ export default class ResultTable extends Component {
                             <th>Adresse</th>
                             <th>Prix</th>
                             <th>Distance</th>
+                            <th>Plein</th>
+                            <th>Trajet</th>
+                            <th>Total</th>
                         </tr>
                     </thead>
                     <tbody>

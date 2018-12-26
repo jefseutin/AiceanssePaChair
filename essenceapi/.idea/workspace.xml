@@ -6,16 +6,7 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="576ff391-8337-453c-a889-48a5d5eef267" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PrixCarburants_quotidien_20181201.zip" beforeDir="false" afterPath="$PROJECT_DIR$/PrixCarburants_quotidien_20181201.zip" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/essence/api/DataParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/essence/api/DataParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/essence/api/DatabaseRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/essence/api/DatabaseRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/essence/api/objects/Location.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/essence/api/objects/Location.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front/src/components/CustomMap.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/components/CustomMap.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front/src/components/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/components/Home.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front/src/components/ResultTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/components/ResultTable.js" afterDir="false" />
-    </list>
+    <list default="true" id="576ff391-8337-453c-a889-48a5d5eef267" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -28,7 +19,7 @@
     <session id="-2097186136">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="6" />
+          <entry key="project.closed" value="7" />
           <entry key="project.open.time.1" value="2" />
           <entry key="project.open.time.10" value="2" />
           <entry key="project.open.time.11" value="1" />
@@ -71,10 +62,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/essence/api/DataParser.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="411">
+            <state relative-caret-position="513">
               <caret line="53" column="27" lean-forward="true" selection-start-line="53" selection-start-column="27" selection-end-line="53" selection-end-column="27" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -98,7 +89,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/essence/api/DatabaseRequest.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="235">
@@ -290,7 +281,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1545698380526" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1545755014852" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../tmp/AiceanssePaChair/essenceapi" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -410,12 +401,12 @@
       <workItem from="1544098363179" duration="1773000" />
       <workItem from="1544358575335" duration="6613000" />
       <workItem from="1545384565327" duration="7258000" />
-      <workItem from="1545580900995" duration="15014000" />
+      <workItem from="1545580900995" duration="16384000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="47671000" />
+    <option name="totallyTimeSpent" value="49041000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -428,7 +419,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -440,7 +430,7 @@
       <window_info id="Web" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32884097" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32884097" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -557,16 +547,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/essence/api/DataParser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="411">
-          <caret line="53" column="27" lean-forward="true" selection-start-line="53" selection-start-column="27" selection-end-line="53" selection-end-column="27" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/essence/api/objects/Station.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
@@ -598,6 +578,16 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="235">
           <caret line="54" column="24" selection-start-line="54" selection-start-column="24" selection-end-line="54" selection-end-column="24" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/essence/api/DataParser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="513">
+          <caret line="53" column="27" lean-forward="true" selection-start-line="53" selection-start-column="27" selection-end-line="53" selection-end-column="27" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
