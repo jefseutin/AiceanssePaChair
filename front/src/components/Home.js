@@ -58,7 +58,7 @@ export default class Home extends Component {
             apiRequest('distance', 'GET', data, res => {
                 station.distance = Number(res.resourceSets[0].resources[0].results[0].travelDistance).toFixed(2);
                 if (--k === 0)
-                    this.calculateAndSortBest();
+                    this.calculateAndSortBest(1);
             });
         });
     }
@@ -93,55 +93,59 @@ export default class Home extends Component {
 
         return (
             <div>
+                <h1 class="display-1">Jiléjone</h1>
                 <div>
-                    <p>Latitude: {this.state.location[0]}</p>
-                    <p>Longitude: {this.state.location[1]}</p>
-                    <p>Stations autour de vous : {this.state.stations.length}</p>
+                    <p>
+                        Latitude: {this.state.location[0]}, 
+                        Longitude: {this.state.location[1]}, 
+                        Stations autour de vous : {this.state.stations.length}
+                    </p>
                 </div>
                 {
-                    this.state.loading === false &&
-                    <div className="row col-md-10 offset-md-1">
-                        <div className="col-md-8" >
-                            <ResultTable stations={this.state.stations} />
+                    this.state.loading === false ?
+                        <div className="row col-md-10 offset-md-1">
+                            <div className="col-md-8" >
+                                <ResultTable stations={this.state.stations} />
+                            </div>
+                            <div className="col-md-4">
+
+                                <InputGroup>
+                                    <InputGroupAddon addonType="prepend">
+                                        <InputGroupText>Consommation (L/100km)</InputGroupText>
+                                    </InputGroupAddon>
+                                    <Input
+                                        type="number"
+                                        min="3"
+                                        max="20"
+                                        step="0.1"
+                                        defaultValue={this.state.consumption}
+                                        onChange={e => this.setState({ consumption: Number(e.target.value) })} />
+                                </InputGroup><br />
+
+                                <InputGroup>
+                                    <InputGroupAddon addonType="prepend">
+                                        <InputGroupText>Quantité (Litres)</InputGroupText>
+                                    </InputGroupAddon>
+                                    <Input type="number" onChange={e => this.setState({ quantity: Number(e.target.value) })} />
+                                    <InputGroupAddon addonType="append">
+                                        <Button onClick={e => this.calculateAndSortBest(1)}>Calculer</Button>
+                                    </InputGroupAddon>
+                                </InputGroup> <br />
+
+                                <InputGroup>
+                                    <InputGroupAddon addonType="prepend">
+                                        <InputGroupText>Budget (€)</InputGroupText>
+                                    </InputGroupAddon>
+                                    <Input type="number" onChange={e => this.setState({ budget: Number(e.target.value) })} />
+                                    <InputGroupAddon addonType="append">
+                                        <Button onClick={e => this.calculateAndSortBest(2)}>Calculer</Button>
+                                    </InputGroupAddon>
+                                </InputGroup> <br />
+
+                                <CustomMap position={this.state.location} stations={this.state.stations} />
+                            </div>
                         </div>
-                        <div className="col-md-4">
-
-                            <InputGroup>
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText>Consommation (L/100km)</InputGroupText>
-                                </InputGroupAddon>
-                                <Input
-                                    type="number"
-                                    min="3"
-                                    max="20"
-                                    step="0.1"
-                                    defaultValue={this.state.consumption}
-                                    onChange={e => this.setState({ consumption: Number(e.target.value) })} />
-                            </InputGroup><br />
-
-                            <InputGroup>
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText>Quantité (Litres)</InputGroupText>
-                                </InputGroupAddon>
-                                <Input type="number" onChange={e => this.setState({ quantity: Number(e.target.value) })} />
-                                <InputGroupAddon addonType="append">
-                                    <Button onClick={e => this.calculateAndSortBest(1)}>Calculer</Button>
-                                </InputGroupAddon>
-                            </InputGroup> <br />
-
-                            <InputGroup>
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText>Budget (€)</InputGroupText>
-                                </InputGroupAddon>
-                                <Input type="number" onChange={e => this.setState({ budget: Number(e.target.value) })} />
-                                <InputGroupAddon addonType="append">
-                                    <Button onClick={e => this.calculateAndSortBest(2)}>Calculer</Button>
-                                </InputGroupAddon>
-                            </InputGroup> <br />
-
-                            <CustomMap position={this.state.location} stations={this.state.stations} />
-                        </div>
-                    </div>
+                        : <img src="http://le-macaron.fr/img/load-insta.gif" />
                 }
             </div>
         );
