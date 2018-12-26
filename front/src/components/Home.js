@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { InputGroup, InputGroupAddon, InputGroupText, Button, Input } from 'reactstrap';
 import { apiRequest } from '../api';
 import CustomMap from './CustomMap';
 import ResultTable from './ResultTable';
@@ -10,7 +11,8 @@ export default class Home extends Component {
         this.state = {
             location: [],
             stations: [],
-            loading: true
+            loading: true,
+            consumption: 5.5
         };
     }
 
@@ -61,9 +63,10 @@ export default class Home extends Component {
 
 
     calculateAndSortBest() {
-        let carConsumptionKm = 6.8/100, quantity = 60, k = 10;
+        let carConsumptionKm = 6.8 / 100, quantity = 60, k = 10;
 
         this.state.stations.forEach(station => {
+            station.quantity = quantity;
             station.fullPrice = Number(station.fuels['Gazole'] * quantity).toFixed(2);
             station.tripPrice = Number(carConsumptionKm * station.distance * station.fuels['Gazole']).toFixed(2);
             station.totalCost = Number(Number(station.fullPrice) + Number(station.tripPrice)).toFixed(2);
@@ -90,10 +93,44 @@ export default class Home extends Component {
                 {
                     this.state.loading === false &&
                     <div className="row col-md-10 offset-md-1">
-                        <div className="col-md-6" >
+                        <div className="col-md-8" >
                             <ResultTable stations={this.state.stations} />
                         </div>
-                        <div className="col-md-6">
+                        <div className="col-md-4">
+
+                            <InputGroup>
+                                <InputGroupAddon addonType="prepend">
+                                    <InputGroupText>Consommation (L/100km)</InputGroupText>
+                                </InputGroupAddon>
+                                <Input
+                                    type="number"
+                                    min="3"
+                                    max="20"
+                                    step="0.1"
+                                    defaultValue={this.state.consumption}
+                                    onChange={e => this.setState({ consumption: Number(e.target.value) })} />
+                            </InputGroup><br />
+
+                            <InputGroup>
+                                <InputGroupAddon addonType="prepend">
+                                    <InputGroupText>Quantité (Litres)</InputGroupText>
+                                </InputGroupAddon>
+                                <Input type="number" id="quantity" />
+                                <InputGroupAddon addonType="append">
+                                    <Button onClick={e => console.log("calculate from quantity")}>Calculer</Button>
+                                </InputGroupAddon>
+                            </InputGroup> <br />
+
+                            <InputGroup>
+                                <InputGroupAddon addonType="prepend">
+                                    <InputGroupText>Budget (€)</InputGroupText>
+                                </InputGroupAddon>
+                                <Input type="number" />
+                                <InputGroupAddon addonType="append">
+                                    <Button onClick={e => console.log("calculate from budget")}>Calculer</Button>
+                                </InputGroupAddon>
+                            </InputGroup> <br />
+
                             <CustomMap position={this.state.location} stations={this.state.stations} />
                         </div>
                     </div>

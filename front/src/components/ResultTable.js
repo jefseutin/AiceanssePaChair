@@ -13,8 +13,9 @@ export default class ResultTable extends Component {
                     <th scope="row">{k++}</th>
                     <td>{station.address}<br/>{station.city}</td>
                     <td>{station.fuels.Gazole}€</td>
-                    <td>{station.distance} km</td>
+                    <td>{station.quantity}L</td>
                     <td>{station.fullPrice}€</td>
+                    <td>{station.distance} km</td>
                     <td>{station.tripPrice}€</td>
                     <td>{station.totalCost}€</td>
                 </tr>
@@ -29,8 +30,9 @@ export default class ResultTable extends Component {
                             <th>#</th>
                             <th>Adresse</th>
                             <th>Prix</th>
-                            <th>Distance</th>
+                            <th>Quantité</th>
                             <th>Plein</th>
+                            <th>Distance</th>
                             <th>Trajet</th>
                             <th>Total</th>
                         </tr>
