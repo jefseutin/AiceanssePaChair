@@ -2,6 +2,8 @@
 RemoteSystemsTempFiles/
 
 /essenceapi/target
+/essenceapi/.idea
+/essenceapi/out
 
 # Compiled source #
 ###################

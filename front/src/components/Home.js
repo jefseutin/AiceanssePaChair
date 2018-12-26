@@ -12,7 +12,9 @@ export default class Home extends Component {
             location: [],
             stations: [],
             loading: true,
-            consumption: 5.5
+            consumption: 5.5,
+            quantity: 0,
+            budget: 0
         };
     }
 
@@ -62,16 +64,22 @@ export default class Home extends Component {
     }
 
 
-    calculateAndSortBest() {
-        let carConsumptionKm = 6.8 / 100, quantity = 60, k = 10;
+    calculateAndSortBest(type) {
+        this.setState({ loading: true });
+
+        let carConsumptionKm = this.state.consumption / 100;
+        let k = 10;
 
         this.state.stations.forEach(station => {
-            station.quantity = quantity;
-            station.fullPrice = Number(station.fuels['Gazole'] * quantity).toFixed(2);
-            station.tripPrice = Number(carConsumptionKm * station.distance * station.fuels['Gazole']).toFixed(2);
+            let price = station.fuels['Gazole'];
+            station.tripPrice = Number(carConsumptionKm * station.distance * price).toFixed(2) * 2;
+            station.quantity = (type === 1) ? this.state.quantity : Number((this.state.budget - station.tripPrice) / price).toFixed(2);
+            station.fullPrice = Number(price * station.quantity).toFixed(2);
             station.totalCost = Number(Number(station.fullPrice) + Number(station.tripPrice)).toFixed(2);
             if (--k === 0) {
-                this.sortByKey(this.state.stations, "totalCost");
+                this.sortByKey(this.state.stations, type === 1 ? "totalCost" : "quantity");
+                if (type === 2)
+                    this.state.stations.reverse();
                 this.setState({
                     loading: false
                 });
@@ -115,9 +123,9 @@ export default class Home extends Component {
                                 <InputGroupAddon addonType="prepend">
                                     <InputGroupText>Quantité (Litres)</InputGroupText>
                                 </InputGroupAddon>
-                                <Input type="number" id="quantity" />
+                                <Input type="number" onChange={e => this.setState({ quantity: Number(e.target.value) })} />
                                 <InputGroupAddon addonType="append">
-                                    <Button onClick={e => console.log("calculate from quantity")}>Calculer</Button>
+                                    <Button onClick={e => this.calculateAndSortBest(1)}>Calculer</Button>
                                 </InputGroupAddon>
                             </InputGroup> <br />
 
@@ -125,9 +133,9 @@ export default class Home extends Component {
                                 <InputGroupAddon addonType="prepend">
                                     <InputGroupText>Budget (€)</InputGroupText>
                                 </InputGroupAddon>
-                                <Input type="number" />
+                                <Input type="number" onChange={e => this.setState({ budget: Number(e.target.value) })} />
                                 <InputGroupAddon addonType="append">
-                                    <Button onClick={e => console.log("calculate from budget")}>Calculer</Button>
+                                    <Button onClick={e => this.calculateAndSortBest(2)}>Calculer</Button>
                                 </InputGroupAddon>
                             </InputGroup> <br />
 
