@@ -3,6 +3,7 @@ package com.essence.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -17,11 +18,11 @@ public class DatabaseRequest {
     private MongoDatabase db;
 
     public DatabaseRequest() {
-        /*MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb://cdpjiro:cdp1jiro@ds253203.mlab.com:53203/cdpjiro"));
-        db = mongoClient.getDatabase("cdpjiro");*/
+        MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb://user_dtb:JilejoneF4uche@ds261138.mlab.com:61138/jilejone_bdd"));
+        db = mongoClient.getDatabase("jilejone_bdd");
 
-        MongoClient mongoClient = new MongoClient();
-        db = mongoClient.getDatabase("essence");
+        //MongoClient mongoClient = new MongoClient();
+        //db = mongoClient.getDatabase("essence");
     }
 
     private String documentsToJson(MongoIterable<Document> documents) {
