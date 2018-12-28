@@ -144,7 +144,7 @@ export default class Home extends Component {
                                 <CustomMap position={this.state.location} stations={this.state.stations} />
                             </div>
                         </div>
-                        : <img src="http://le-macaron.fr/img/load-insta.gif" />
+                        : <img alt="loading_gif" src="http://le-macaron.fr/img/load-insta.gif" />
                 }
             </div>
         );

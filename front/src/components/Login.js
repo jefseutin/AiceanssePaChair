@@ -17,7 +17,11 @@ export default class Login extends Component {
                     <hr className="my-2" />
                     <p>Marre de payer votre plein 20 centimes trop cher ? Vous êtes au bon endroit.</p>
                     <p className="lead">
-                        <Button color="primary" onClick={e => this.props.gotoRegister()}>S'inscrire</Button>
+                        <Button
+                            type="button"
+                            color="primary"
+                            onClick={e => this.props.gotoRegister()}>
+                            S'inscrire</Button>
                     </p>
                 </Jumbotron>
 
