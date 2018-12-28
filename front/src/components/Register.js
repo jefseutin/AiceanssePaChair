@@ -1,17 +1,22 @@
 import React, { Component } from 'react';
 import { Form, Input, InputGroup, InputGroupAddon, InputGroupText, Button, Jumbotron } from 'reactstrap';
+import { apiRequest } from '../api';
 
 export default class Register extends Component {
 
-    onSubmit(){
-        console.log("inscription");
+    onSubmit(event) {
+        event.preventDefault();
+        apiRequest('user', 'POST', event.target, response => {
+            if (response.success)
+                this.props.gotoLogin();
+        });
     }
 
     render() {
         return (
             <div>
                 <Jumbotron>
-                    <h1 className="display-1">Inscription</h1>
+                    <h1 className="display-3">Inscription</h1>
                     <p className="lead">Inscrivez-vous pour économiser en masse des centaines de centimes d'€</p>
                 </Jumbotron>
 
@@ -24,6 +29,7 @@ export default class Register extends Component {
                                 <InputGroupText>Nom d'utilisateur</InputGroupText>
                             </InputGroupAddon>
                             <Input
+                                name="login"
                                 type="text"
                                 required />
                         </InputGroup><br />
@@ -33,6 +39,7 @@ export default class Register extends Component {
                                 <InputGroupText>Mot de passe</InputGroupText>
                             </InputGroupAddon>
                             <Input
+                                name="password"
                                 type="password"
                                 required />
                         </InputGroup><br />

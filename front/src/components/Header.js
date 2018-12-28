@@ -11,7 +11,8 @@ export default class Header extends Component {
         this.toggle = this.toggle.bind(this);
         this.state = {
             isOpen: false,
-            component: 1
+            component: 1,
+            accountCreated: false
         };
     }
 
@@ -63,9 +64,10 @@ export default class Header extends Component {
                     !loggedIn &&
                     (this.state.component === 1
                         ? <Login
+                            accountCreated={this.state.accountCreated}
                             setLogged={this.props.setLogged}
                             gotoRegister={e => this.setState({ component: 2 })} />
-                        : <Register />)
+                        : <Register gotoLogin={e => this.setState({ component: 1, accountCreated: true })} />)
                 }
 
             </div>

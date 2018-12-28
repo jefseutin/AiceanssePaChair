@@ -1,5 +1,6 @@
 package com.essence.api;
 
+import com.essence.api.objects.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoClient;
@@ -21,8 +22,12 @@ public class DatabaseRequest {
         MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb://user_dtb:JilejoneF4uche@ds261138.mlab.com:61138/jilejone_bdd"));
         db = mongoClient.getDatabase("jilejone_bdd");
 
-        //MongoClient mongoClient = new MongoClient();
-        //db = mongoClient.getDatabase("essence");
+        /*MongoClient mongoClient = new MongoClient();
+        db = mongoClient.getDatabase("essence");*/
+    }
+
+    public static String status(boolean success) {
+        return "{\"success\":\"" + success + "\"}";
     }
 
     private String documentsToJson(MongoIterable<Document> documents) {
@@ -48,6 +53,12 @@ public class DatabaseRequest {
         return null;
     }
 
+    public String authenticate(User user) {
+        Document u = db.getCollection("user")
+                .find(Filters.and(Filters.eq("login", user.getLogin()), Filters.eq("password", user.getPassword())))
+                .projection(Filters.and(exclude("password"), excludeId())).first();
+        return u != null ? u.toJson() : status(false);
+    }
 
     public String getClosestStations(double longitude, double latitude) {
         FindIterable<Document> stations = db.getCollection("station")
