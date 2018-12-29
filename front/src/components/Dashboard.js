@@ -4,29 +4,37 @@ import { apiRequest } from '../api';
 import CustomMap from './CustomMap';
 import ResultTable from './ResultTable';
 
+
+let state = {
+    location: [],
+    stations: [],
+    loading: true,
+    consumption: 5.5,
+    quantity: 0,
+    budget: 0
+};
+
 export default class Home extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            location: [],
-            stations: [],
-            loading: true,
-            consumption: 5.5,
-            quantity: 0,
-            budget: 0
-        };
+        this.state = state;
+    }
+
+    componentWillUnmount() {
+        state = this.state;
     }
 
     componentDidMount(props) {
-        navigator.geolocation.getCurrentPosition(
-            position => {
-                this.setState({ location: [position.coords.latitude, position.coords.longitude] });
-                this.getNearestStations();
-            },
-            error => console.log(error.message),
-            { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-        );
+        if (this.state.location.length === 0)
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    this.setState({ location: [position.coords.latitude, position.coords.longitude] });
+                    this.getNearestStations();
+                },
+                error => console.log(error.message),
+                { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+            );
     }
 
     getNearestStations() {

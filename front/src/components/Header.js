@@ -29,11 +29,19 @@ export default class Header extends Component {
             <div>
                 <Navbar color="light" light expand="md">
 
-                    <NavbarBrand href="#">Jiléjone</NavbarBrand>
+                    <NavbarBrand href="#" onClick={e => this.props.setComponent(1)}>Jiléjone</NavbarBrand>
                     <NavbarToggler onClick={this.toggle} />
 
                     <Collapse isOpen={this.state.isOpen} navbar>
                         <Nav className="ml-auto" navbar>
+
+
+                            {
+                                loggedIn &&
+                                < NavItem >
+                                    <NavLink href="#" onClick={e => this.props.setComponent(2)}>Mes bolides</NavLink>
+                                </NavItem>
+                            }
 
                             <NavItem>
                                 <NavLink
