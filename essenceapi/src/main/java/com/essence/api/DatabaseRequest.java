@@ -11,6 +11,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import static com.mongodb.client.model.Projections.*;
 
@@ -19,11 +20,11 @@ public class DatabaseRequest {
     private MongoDatabase db;
 
     public DatabaseRequest() {
-        MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb://user_dtb:JilejoneF4uche@ds261138.mlab.com:61138/jilejone_bdd"));
-        db = mongoClient.getDatabase("jilejone_bdd");
+        /*MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb://user_dtb:JilejoneF4uche@ds261138.mlab.com:61138/jilejone_bdd"));
+        db = mongoClient.getDatabase("jilejone_bdd");*/
 
-        /*MongoClient mongoClient = new MongoClient();
-        db = mongoClient.getDatabase("essence");*/
+        MongoClient mongoClient = new MongoClient();
+        db = mongoClient.getDatabase("essence");
     }
 
     public static String status(boolean success) {
@@ -56,7 +57,7 @@ public class DatabaseRequest {
     public String authenticate(User user) {
         Document u = db.getCollection("user")
                 .find(Filters.and(Filters.eq("login", user.getLogin()), Filters.eq("password", user.getPassword())))
-                .projection(Filters.and(exclude("password"), excludeId())).first();
+                .projection(exclude("password")).first();
         return u != null ? u.toJson() : status(false);
     }
 
@@ -67,6 +68,10 @@ public class DatabaseRequest {
                 .limit(10);
 
         return documentsToJson(stations);
+    }
+
+    public String getUserCars(String userID) {
+        return documentsToJson(db.getCollection("car").find(Filters.eq("userID", userID)));
     }
 
 

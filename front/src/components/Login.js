@@ -17,7 +17,7 @@ export default class Login extends Component {
             if (response.success === 'false')
                 this.setState({ fail: true });
             else {
-                sessionStorage.setItem("user", response);
+                sessionStorage.setItem("user", JSON.stringify(response));
                 this.props.setLogged(true);
             }
         });

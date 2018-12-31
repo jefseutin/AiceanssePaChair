@@ -2,6 +2,7 @@
 RemoteSystemsTempFiles/
 
 /essenceapi/target
+/essenceapi/classes
 /essenceapi/.idea
 /essenceapi/out
 
