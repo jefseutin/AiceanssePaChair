@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { InputGroup, InputGroupAddon, InputGroupText, Button, Input } from 'reactstrap';
+import { InputGroup, InputGroupAddon, InputGroupText, Button, Input, Badge } from 'reactstrap';
 import { apiRequest } from '../api';
 import CustomMap from './CustomMap';
 import ResultTable from './ResultTable';
@@ -8,8 +8,9 @@ import ResultTable from './ResultTable';
 let state = {
     location: [],
     stations: [],
-    loading: true,
-    consumption: 5.5,
+    cars: [],
+    loading: false,
+    selectedCar: undefined,
     quantity: 0,
     budget: 0
 };
@@ -19,6 +20,9 @@ export default class Home extends Component {
     constructor(props) {
         super(props);
         this.state = state;
+        apiRequest('car/all', 'GET', JSON.parse(sessionStorage.getItem('user'))._id.$oid, response => {
+            this.setState({ cars: response });
+        });
     }
 
     componentWillUnmount() {
@@ -30,7 +34,6 @@ export default class Home extends Component {
             navigator.geolocation.getCurrentPosition(
                 position => {
                     this.setState({ location: [position.coords.latitude, position.coords.longitude] });
-                    this.getNearestStations();
                 },
                 error => console.log(error.message),
                 { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
@@ -38,16 +41,14 @@ export default class Home extends Component {
     }
 
     getNearestStations() {
-        apiRequest('station/nearest', 'GET', this.state.location[1] + '/' + this.state.location[0], response => {
-            this.setState({
-                stations: response
+        this.setState({ loading: true });
+        apiRequest('station/nearest', 'GET', this.state.location[1] + '/' + this.state.location[0] + '/' + this.state.cars[this.state.selectedCar].fuel, response => {
+            response.forEach(station => station.location.coordinates.reverse());
+            this.sortByKey(response, 'price');
+            response.reverse();
+            this.setState({ stations: response }, () => {
+                this.getDistance(0);
             });
-
-            this.state.stations.forEach(station => station.location.coordinates.reverse());
-            this.sortByKey(this.state.stations, 'price');
-            this.state.stations.reverse();
-
-            this.getDistance(0);
         });
     }
 
@@ -60,7 +61,7 @@ export default class Home extends Component {
 
     getDistance(idxStart) {
         let ltd = this.state.location[0], lng = this.state.location[1];
-        let k = 10;
+        let k = this.state.stations.length;
         this.state.stations.forEach(station => {
             let data = `DistanceMatrix?origins=${ltd},${lng}&destinations=${station.location.coordinates}&travelMode=driving&key=AvIF_IWuz6PuSbpY35CGEFE7JIzegMdb4j0XbZURfXkJZGACLZjVPrPwXZQNlOGP`;
             apiRequest('distance', 'GET', data, res => {
@@ -72,25 +73,22 @@ export default class Home extends Component {
     }
 
     calculateAndSortBest(type) {
-        this.setState({ loading: true });
-
-        let carConsumptionKm = this.state.consumption / 100;
-        let k = 10;
+        let carConsumptionKm = this.state.cars[this.state.selectedCar].consumption / 100;
+        let k = this.state.stations.length;
 
         this.state.stations.forEach(station => {
-            let price = station.fuels['Gazole'];
+            let price = station.fuels[this.state.cars[this.state.selectedCar].fuel];
             station.tripPrice = Number(carConsumptionKm * station.distance * price).toFixed(2) * 2;
             station.quantity = (type === 1) ? this.state.quantity : Number((this.state.budget - station.tripPrice) / price).toFixed(2);
             station.fullPrice = Number(price * station.quantity).toFixed(2);
             station.totalCost = Number(Number(station.fullPrice) + Number(station.tripPrice)).toFixed(2);
             if (--k === 0) {
-                this.sortByKey(this.state.stations, type === 1 ? "totalCost" : "quantity");
-                if (type === 2)
-                    this.state.stations.reverse();
-                this.setState({
-                    loading: false
-                });
-                console.log(this.state.stations);
+                if (this.state.stations.length > 1) {
+                    this.sortByKey(this.state.stations, type === 1 ? "totalCost" : "quantity");
+                    if (type === 2)
+                        this.state.stations.reverse();
+                    this.setState({ loading: false });
+                }
             }
         });
 
@@ -100,62 +98,80 @@ export default class Home extends Component {
 
         return (
             <div>
-                <h1 className="display-1">Jiléjone</h1>
-                <div>
-                    <p>
-                        Latitude: {this.state.location[0]},
-                        Longitude: {this.state.location[1]},
-                        Stations autour de vous : {this.state.stations.length}
-                    </p>
-                </div>
-                {
-                    this.state.loading === false ?
-                        <div className="row col-md-10 offset-md-1">
-                            <div className="col-md-8" >
-                                <ResultTable stations={this.state.stations} />
-                            </div>
-                            <div className="col-md-4">
-
-                                <InputGroup>
-                                    <InputGroupAddon addonType="prepend">
-                                        <InputGroupText>Consommation (L/100km)</InputGroupText>
-                                    </InputGroupAddon>
-                                    <Input
-                                        type="number"
-                                        min="3"
-                                        max="20"
-                                        step="0.1"
-                                        defaultValue={this.state.consumption}
-                                        onChange={e => this.setState({ consumption: Number(e.target.value) })} />
-                                </InputGroup><br />
-
-                                <InputGroup>
-                                    <InputGroupAddon addonType="prepend">
-                                        <InputGroupText>Quantité (Litres)</InputGroupText>
-                                    </InputGroupAddon>
-                                    <Input type="number" onChange={e => this.setState({ quantity: Number(e.target.value) })} />
-                                    <InputGroupAddon addonType="append">
-                                        <Button onClick={e => this.calculateAndSortBest(1)}>Calculer</Button>
-                                    </InputGroupAddon>
-                                </InputGroup> <br />
-
-                                <InputGroup>
-                                    <InputGroupAddon addonType="prepend">
-                                        <InputGroupText>Budget (€)</InputGroupText>
-                                    </InputGroupAddon>
-                                    <Input type="number" onChange={e => this.setState({ budget: Number(e.target.value) })} />
-                                    <InputGroupAddon addonType="append">
-                                        <Button onClick={e => this.calculateAndSortBest(2)}>Calculer</Button>
-                                    </InputGroupAddon>
-                                </InputGroup> <br />
-
-                                <CustomMap position={this.state.location} stations={this.state.stations} />
-                            </div>
+                <br />
+                <div className="row col-md-10 offset-md-1">
+                    {
+                        this.state.selectedCar &&
+                        <div className="row col-md-8">
+                            <h3 className='col-md-6'><Badge pill>Carburant : {this.state.cars[this.state.selectedCar].fuel}</Badge></h3>
+                            <h3 className='col-md-6'><Badge pill>Consommation : {this.state.cars[this.state.selectedCar].consumption} L/100km</Badge></h3>
                         </div>
-                        : <img alt="loading_gif" src="http://le-macaron.fr/img/load-insta.gif" />
-                }
+                    }
+                    <br />
+                    <div className="col-md-8" >
+                        <ResultTable
+                            loading={this.state.loading}
+                            stations={this.state.stations}
+                            fuel={this.state.selectedCar && this.state.cars[this.state.selectedCar].fuel} />
+                    </div>
+                    <div className="col-md-4">
+
+                        <InputGroup>
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText>Bolide</InputGroupText>
+                            </InputGroupAddon>
+                            <Input
+                                type='select'
+                                defaultChecked={-1}
+                                onChange={e => this.setState({ selectedCar: e.target.value }, () => {
+                                    if (this.state.selectedCar)
+                                        this.getNearestStations();
+                                    else
+                                        this.setState({ stations: [] });
+                                })}>
+
+                                <option value={undefined}></option>
+                                {
+                                    this.state.cars.map((car, i) => {
+                                        return (
+                                            <option key={i} value={i}>{car.name}</option>
+                                        )
+                                    })
+                                }
+                                
+                            </Input>
+                        </InputGroup>
+
+                        <br />
+                        <InputGroup>
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText>Quantité (Litres)</InputGroupText>
+                            </InputGroupAddon>
+                            <Input type="number" onChange={e => this.setState({ quantity: Number(e.target.value) })} />
+                            <InputGroupAddon addonType="append">
+                                <Button onClick={e => this.calculateAndSortBest(1)}>Calculer</Button>
+                            </InputGroupAddon>
+                        </InputGroup> <br />
+
+                        <InputGroup>
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText>Budget (€)</InputGroupText>
+                            </InputGroupAddon>
+                            <Input type="number" onChange={e => this.setState({ budget: Number(e.target.value) })} />
+                            <InputGroupAddon addonType="append">
+                                <Button onClick={e => this.calculateAndSortBest(2)}>Calculer</Button>
+                            </InputGroupAddon>
+                        </InputGroup> <br />
+                        {
+                            this.state.location.length > 0 &&
+                            <CustomMap
+                                position={this.state.location}
+                                stations={this.state.stations}
+                                fuel={this.state.selectedCar && this.state.cars[this.state.selectedCar].fuel} />
+                        }
+                    </div>
+                </div>
             </div>
         );
     }
-
 }

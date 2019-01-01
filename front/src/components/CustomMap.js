@@ -4,20 +4,37 @@ import Leaflet from 'leaflet'
 
 export default class CustomMap extends Component {
 
-    render() {
+    constructor(props) {
+        super(props);
+        this.state = {
+            scroll: false
+        };
+    }
 
-        let markers = this.props.stations.map(station => {
+    generateMarkers() {
+        return this.props.stations.map(station => {
             return (
                 <Marker key={station.id} position={station.location.coordinates} icon={this.customPin('#2196F3')}>
-                    <Popup>{station.address}</Popup>
+                    <Popup>
+                        Distance : {station.distance}km
+                        <br />
+                        Litre de {this.props.fuel} : {station.fuels[this.props.fuel]}€
+                    </Popup>
                 </Marker>
             );
         });
+    }
 
+    render() {
 
         return (
             <div align="center">
-                <Map center={this.props.position} zoom={12} style={{ height: "500px" }}>
+                <Map
+                    scrollWheelZoom={this.state.scroll}
+                    onClick={e => this.setState({ scroll: !this.state.scroll })}
+                    center={this.props.position}
+                    zoom={12}
+                    style={{ height: "500px" }}>
 
                     <TileLayer
                         url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
@@ -35,7 +52,7 @@ export default class CustomMap extends Component {
                         radius={5 * 1000}
                     />
 
-                    {markers}
+                    {this.generateMarkers()}
 
                 </Map>
             </div>

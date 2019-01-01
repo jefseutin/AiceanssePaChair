@@ -23,4 +23,18 @@ public class CarResource extends Main {
         return dtb.getUserCars(userid);
     }
 
+    @PUT
+    @Path("{carid}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String update(@PathParam("carid") String carid, Car car) {
+        return dtb.update("car", car, carid);
+    }
+
+    @DELETE
+    @Path("{carid}")
+    public String delete(@PathParam("carid") String carid) {
+        return dtb.delete("car", carid);
+    }
+
 }

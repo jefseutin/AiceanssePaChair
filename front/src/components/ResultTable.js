@@ -5,14 +5,15 @@ export default class ResultTable extends Component {
 
 
     render() {
+        console.log('la')
 
         let k = 1;
         let rows = this.props.stations.map(station => {
             return (
-                <tr key={station.id}>
+                <tr key={k}>
                     <th scope="row">{k++}</th>
-                    <td>{station.address}<br/>{station.city}</td>
-                    <td>{station.fuels.Gazole}€</td>
+                    <td>{station.address}<br />{station.city}</td>
+                    <td>{station.fuels[this.props.fuel]}€</td>
                     <td>{station.quantity}L</td>
                     <td>{station.fullPrice}€</td>
                     <td>{station.distance} km</td>
@@ -38,9 +39,10 @@ export default class ResultTable extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {rows}
+                        {!this.props.loading && rows}
                     </tbody>
                 </Table>
+                {this.props.loading && <img alt="loading_gif" src="http://le-macaron.fr/img/load-insta.gif" />}
             </div>
         );
     }

@@ -9,8 +9,9 @@ export default class CarManager extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            items: [JSON.parse('{"userID":"5c256fd3d363ea1e784f7d16","name":"BMW 530D","consumption":"9.4","fuel":"SP98"}')],
-            showModal: false
+            items: [],
+            showModal: false,
+            selectedCar: -1
         }
 
         apiRequest('car/all', 'GET', JSON.parse(sessionStorage.getItem('user'))._id.$oid, response => {
@@ -19,21 +20,31 @@ export default class CarManager extends Component {
     }
 
     onModalClose(res) {
-        if (res !== undefined)
-            this.setState({ items: [...this.state.items, res] });
-        this.setState({ showModal: false });
+        if (res !== undefined) {
+            if (this.state.selectedCar > -1) {
+                if (res === -1)
+                    this.setState({ items: this.state.items.filter((_, i) => this.state.selectedCar !== i) });
+                else {
+                    const newitems = this.state.items.slice();
+                    newitems[this.state.selectedCar] = res;
+                    this.setState({ items: newitems });
+                }
+            } else
+                this.setState({ items: [...this.state.items, res] });
+        }
+        this.setState({ showModal: false, selectedCar: -1 });
     }
 
     generateRows() {
         let k = 1;
-        return this.state.items.map(car => {
+        return this.state.items.map((car, i) => {
             return (
                 <tr key={k}>
                     <th scope='row'>{k++}</th>
                     <td>{car.name}</td>
                     <td>{car.consumption}L</td>
                     <td>{car.fuel}</td>
-                    <td><Button>Modifer</Button></td>
+                    <td><Button onClick={e => this.setState({ showModal: true, selectedCar: i })}>Modifer</Button></td>
                 </tr>
             );
         });
@@ -80,7 +91,9 @@ export default class CarManager extends Component {
 
                 {
                     this.state.showModal &&
-                    <CarModal onClose={this.onModalClose.bind(this)} />
+                    <CarModal
+                        onClose={this.onModalClose.bind(this)}
+                        car={this.state.selectedCar > -1 ? this.state.items[this.state.selectedCar] : undefined} />
                 }
             </div >
         );

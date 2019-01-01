@@ -4,15 +4,14 @@ import com.essence.api.objects.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.MongoIterable;
-import com.mongodb.client.model.Filters;
+import com.mongodb.client.*;
+import com.mongodb.client.model.FindOneAndUpdateOptions;
+import com.mongodb.client.model.ReturnDocument;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
+import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Projections.*;
 
 public class DatabaseRequest {
@@ -54,16 +53,41 @@ public class DatabaseRequest {
         return null;
     }
 
+    public String update(String collectionName, Object object, String id) {
+        try {
+            MongoCollection<Document> collection = db.getCollection(collectionName);
+            ObjectMapper mapper = new ObjectMapper();
+            String jsonString = mapper.writeValueAsString(object);
+            Document doc = new Document("$set", Document.parse(jsonString));
+
+            FindOneAndUpdateOptions options = new FindOneAndUpdateOptions();
+            options.returnDocument(ReturnDocument.AFTER);
+            Document d = collection.findOneAndUpdate(eq("_id", new ObjectId(id)), doc, options);
+            return d.toJson();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String delete(String collectionName, String id) {
+        MongoCollection<Document> collection = db.getCollection(collectionName);
+        Bson bsonEq = eq("_id", new ObjectId(id));
+        if (collection.deleteOne(bsonEq).getDeletedCount() == 1)
+            return status(true);
+        return status(false);
+    }
+
     public String authenticate(User user) {
         Document u = db.getCollection("user")
-                .find(Filters.and(Filters.eq("login", user.getLogin()), Filters.eq("password", user.getPassword())))
+                .find(and(eq("login", user.getLogin()), eq("password", user.getPassword())))
                 .projection(exclude("password")).first();
         return u != null ? u.toJson() : status(false);
     }
 
-    public String getClosestStations(double longitude, double latitude) {
+    public String getClosestStations(double longitude, double latitude, String fuel) {
         FindIterable<Document> stations = db.getCollection("station")
-                .find(Filters.and(Filters.geoWithinCenterSphere("location", longitude, latitude, 5 / 6371.0)))
+                .find(and(geoWithinCenterSphere("location", longitude, latitude, 5 / 6371.0), exists("fuels." + fuel)))
                 .projection(fields(excludeId()))
                 .limit(10);
 
@@ -71,8 +95,6 @@ public class DatabaseRequest {
     }
 
     public String getUserCars(String userID) {
-        return documentsToJson(db.getCollection("car").find(Filters.eq("userID", userID)));
+        return documentsToJson(db.getCollection("car").find(eq("userID", userID)));
     }
-
-
 }

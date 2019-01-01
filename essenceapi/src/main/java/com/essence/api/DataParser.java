@@ -20,7 +20,7 @@ public class DataParser {
         DatabaseRequest dtb = new DatabaseRequest();
         //System.out.println(dtb.getClosestStations(-0.6768320999999999, 44.801086399999996));
 
-        parseXML();
+        //parseXML();
     }
 
     public static void parseXML() {

@@ -9,7 +9,7 @@ export default class Home extends Component {
         super(props);
         this.state = {
             loggedIn: sessionStorage.getItem('user') !== null,
-            component: 2
+            component: 1
         }
     }
 
