@@ -4,9 +4,18 @@ import { apiRequest } from '../api';
 
 export default class Register extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            loading: false
+        };
+    }
+
     onSubmit(event) {
         event.preventDefault();
+        this.setState({ loading: true });
         apiRequest('user', 'POST', event.target, response => {
+            this.setState({ loading: false });
             if (response.success)
                 this.props.gotoLogin();
         });
@@ -45,7 +54,11 @@ export default class Register extends Component {
                         </InputGroup><br />
 
 
-                        <Button type="submit" color="success" outline>S'inscrire</Button>
+                        <Button
+                            type="submit"
+                            color="success"
+                            disabled={this.state.loading}
+                            outline>S'inscrire</Button>
 
                     </Form>
                 </div>

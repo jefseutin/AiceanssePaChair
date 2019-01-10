@@ -101,7 +101,7 @@ export default class Home extends Component {
                 <br />
                 <div className="row col-md-10 offset-md-1">
                     {
-                        this.state.selectedCar &&
+                        (this.state.selectedCar && this.state.cars.length > 0) &&
                         <div className="row col-md-8">
                             <h3 className='col-md-6'><Badge pill>Carburant : {this.state.cars[this.state.selectedCar].fuel}</Badge></h3>
                             <h3 className='col-md-6'><Badge pill>Consommation : {this.state.cars[this.state.selectedCar].consumption} L/100km</Badge></h3>
@@ -138,7 +138,7 @@ export default class Home extends Component {
                                         )
                                     })
                                 }
-                                
+
                             </Input>
                         </InputGroup>
 

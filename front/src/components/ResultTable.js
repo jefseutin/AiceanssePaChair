@@ -5,8 +5,6 @@ export default class ResultTable extends Component {
 
 
     render() {
-        console.log('la')
-
         let k = 1;
         let rows = this.props.stations.map(station => {
             return (
@@ -42,7 +40,7 @@ export default class ResultTable extends Component {
                         {!this.props.loading && rows}
                     </tbody>
                 </Table>
-                {this.props.loading && <img alt="loading_gif" src="http://le-macaron.fr/img/load-insta.gif" />}
+                {this.props.loading && <img alt="loading_gif" src="https://goo.gl/MzUHSY" />}
             </div>
         );
     }

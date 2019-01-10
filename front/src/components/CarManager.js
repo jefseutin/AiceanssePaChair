@@ -11,12 +11,14 @@ export default class CarManager extends Component {
         this.state = {
             items: [],
             showModal: false,
-            selectedCar: -1
+            selectedCar: -1,
+            loading: true
         }
 
         apiRequest('car/all', 'GET', JSON.parse(sessionStorage.getItem('user'))._id.$oid, response => {
             this.setState({ items: response });
-        })
+            this.setState({loading: false});
+        });
     }
 
     onModalClose(res) {
@@ -88,6 +90,9 @@ export default class CarManager extends Component {
                         <tbody>{this.generateRows()}</tbody>
                     </Table>
                 </div>
+
+                {this.state.loading && <img alt="loading_gif" src="https://goo.gl/MzUHSY" />}
+
 
                 {
                     this.state.showModal &&

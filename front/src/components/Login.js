@@ -7,15 +7,19 @@ export default class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            fail: false
+            fail: false,
+            loading: false
         };
     }
 
     onSubmit(event) {
         event.preventDefault();
+        this.setState({ loading: true });
         apiRequest('user/authenticate', 'POST', event.target, response => {
-            if (response.success === 'false')
+            if (response.success === 'false') {
                 this.setState({ fail: true });
+                this.setState({ loading: false });
+            }
             else {
                 sessionStorage.setItem("user", JSON.stringify(response));
                 this.props.setLogged(true);
@@ -31,11 +35,12 @@ export default class Login extends Component {
                     <p className="lead">Connectez-vous pour profiter de ce système de recherche révolutionnaire</p>
                     <hr className="my-2" />
                     <p>Marre de payer votre plein 20 centimes trop cher ? Vous êtes au bon endroit.</p>
-                        <Button
-                            type="button"
-                            color="primary"
-                            onClick={e => this.props.gotoRegister()}>
-                            S'inscrire</Button>
+                    <Button
+                        type="button"
+                        color="primary"
+                        disabled={this.state.loading}
+                        onClick={e => this.props.gotoRegister()}>
+                        S'inscrire</Button>
                 </Jumbotron>
 
                 <div className="row col-md-4 offset-md-4">
@@ -72,7 +77,11 @@ export default class Login extends Component {
                                 required />
                         </InputGroup><br />
 
-                        <Button type="submit" color="success" outline>Se connecter</Button>
+                        <Button
+                            type="submit"
+                            color="success"
+                            disabled={this.state.loading}
+                            outline>{this.state.loading ? 'Connexion ...' : 'Se connecter'}</Button>
 
                     </Form>
                 </div>

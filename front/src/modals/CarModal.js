@@ -21,7 +21,8 @@ export default class CarModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isOpen: true
+            isOpen: true,
+            loading: false
         };
 
         this.onClose = this.onClose.bind(this);
@@ -30,6 +31,7 @@ export default class CarModal extends Component {
 
     onSubmit(event) {
         event.preventDefault();
+        this.setState({ loading: true });
         let url = this.props.car ? ('car/' + this.props.car._id.$oid) : 'car';
         apiRequest(url, this.props.car ? 'PUT' : 'POST', event.target, response => {
             this.onClose(response);
@@ -37,6 +39,7 @@ export default class CarModal extends Component {
     }
 
     onDelete(event) {
+        this.setState({ loading: true });
         apiRequest('car', 'DELETE', this.props.car._id.$oid, response => {
             this.onClose(-1);
         });
@@ -122,9 +125,23 @@ export default class CarModal extends Component {
                     </ModalBody>
 
                     <ModalFooter>
-                        {this.props.car && <Button color='danger' onClick={e => this.onDelete()}>Supprimer</Button>}
-                        <Button color="primary" type='submit' form='carForm'>Enregistrer</Button>
+
+                        {
+                            this.props.car &&
+                            <Button
+                                color='danger'
+                                onClick={e => this.onDelete()}
+                                disabled={this.state.loading}>Supprimer</Button>
+                        }
+
+                        <Button
+                            color="primary"
+                            type='submit'
+                            form='carForm'
+                            disabled={this.state.loading}>Enregistrer</Button>
+
                         <Button color="secondary" onClick={e => this.onClose()}>Annuler</Button>
+
                     </ModalFooter>
 
                 </Modal>
