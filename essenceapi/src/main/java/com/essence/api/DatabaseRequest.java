@@ -4,6 +4,7 @@ import com.essence.api.objects.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.mongodb.client.*;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
@@ -19,11 +20,11 @@ public class DatabaseRequest {
     private MongoDatabase db;
 
     public DatabaseRequest() {
-        /*MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb://user_dtb:JilejoneF4uche@ds261138.mlab.com:61138/jilejone_bdd"));
-        db = mongoClient.getDatabase("jilejone_bdd");*/
+        MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb://user_dtb:JilejoneF4uche@ds261138.mlab.com:61138/jilejone_bdd"));
+        db = mongoClient.getDatabase("jilejone_bdd");
 
-        MongoClient mongoClient = new MongoClient();
-        db = mongoClient.getDatabase("essence");
+        /*MongoClient mongoClient = new MongoClient();
+        db = mongoClient.getDatabase("essence");*/
     }
 
     public static String status(boolean success) {

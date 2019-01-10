@@ -1,4 +1,4 @@
-const apiUrl = 'http://localhost:8080/api/';
+const apiUrl = 'https://agile-peak-97684.herokuapp.com/api/';
 
 export function parseFormToJson(formdata) {
     let values = {};
