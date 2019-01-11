@@ -12,6 +12,8 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
+import java.util.ArrayList;
+
 import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Projections.*;
 
@@ -31,6 +33,11 @@ public class DatabaseRequest {
         return "{\"success\":\"" + success + "\"}";
     }
 
+    public void dropCollection(String collectionName) {
+        MongoCollection<Document> collection = db.getCollection(collectionName);
+        collection.drop();
+    }
+
     private String documentsToJson(MongoIterable<Document> documents) {
         StringBuilder str = new StringBuilder("[");
         if (documents.first() == null)
@@ -38,6 +45,23 @@ public class DatabaseRequest {
         for (Document d : documents)
             str.append(d.toJson()).append(",");
         return str.deleteCharAt(str.length() - 1).append("]").toString();
+    }
+
+    public void addMany(String collectionName, ArrayList<Object> objects) {
+        try {
+            MongoCollection<Document> collection = db.getCollection(collectionName);
+            ObjectMapper mapper = new ObjectMapper();
+
+            ArrayList<Document> documents = new ArrayList<Document>();
+            for (Object obj : objects) {
+                String jsonString = mapper.writeValueAsString(obj);
+                documents.add(Document.parse(jsonString));
+            }
+
+            collection.insertMany(documents);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 
     public String add(String collectionName, Object object) {

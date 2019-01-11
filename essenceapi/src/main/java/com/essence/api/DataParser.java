@@ -2,6 +2,7 @@ package com.essence.api;
 
 import com.essence.api.objects.Location;
 import com.essence.api.objects.Station;
+import org.apache.commons.io.FileUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -9,24 +10,25 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-public class DataParser {
+public class DataParser extends TimerTask {
 
-    public static void main(String[] args) {
-        DatabaseRequest dtb = new DatabaseRequest();
-        //System.out.println(dtb.getClosestStations(-0.6768320999999999, 44.801086399999996));
+    @Override
+    public void run() {
 
-        //parseXML();
-    }
-
-    public static void parseXML() {
+        //public static void main (String[]args){
         DatabaseRequest dtb = new DatabaseRequest();
         try {
-            ZipFile zipFile = new ZipFile("PrixCarburants_quotidien_20181201.zip");
+            File file = new File(".\\data.zip");
+            FileUtils.copyURLToFile(new URL("https://donnees.roulez-eco.fr/opendata/instantane"), file);
+
+            ZipFile zipFile = new ZipFile(file.getCanonicalPath());
             ZipEntry xmlFIle = zipFile.entries().nextElement();
 
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -35,13 +37,14 @@ public class DataParser {
 
             NodeList stations = document.getElementsByTagName("pdv");
 
+            ArrayList<Object> stations1 = new ArrayList<>();
             for (int i = 0; i < stations.getLength(); ++i) {
                 Node s = stations.item(i);
 
                 NodeList nodeFuels = ((Element) s).getElementsByTagName("prix");
                 if (nodeFuels.getLength() > 0) {
 
-                    Map<String, String> fuels = new HashMap<String, String>();
+                    Map<String, String> fuels = new HashMap<>();
                     for (int j = 0; j < nodeFuels.getLength(); ++j) {
                         Node f = nodeFuels.item(j);
                         fuels.put(f.getAttributes().getNamedItem("nom").getNodeValue(), f.getAttributes().getNamedItem("valeur").getNodeValue());
@@ -64,10 +67,18 @@ public class DataParser {
 
 
                     Station station = new Station(id, zipcode, location, city, address, fuels);
-                    dtb.add("station", station);
+                    stations1.add(station);
                 }
             }
 
+            dtb.dropCollection("station");
+            dtb.addMany("station", stations1);
+            zipFile.close();
+            System.out.println(file.delete());
+
+
+            String currentDate = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(new Date());
+            dtb.add("info", new org.bson.Document().append("date", currentDate));
 
         } catch (Exception e) {
             e.printStackTrace();

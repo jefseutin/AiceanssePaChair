@@ -87,8 +87,8 @@ export default class Home extends Component {
                     this.sortByKey(this.state.stations, type === 1 ? "totalCost" : "quantity");
                     if (type === 2)
                         this.state.stations.reverse();
-                    this.setState({ loading: false });
                 }
+                this.setState({ loading: false });
             }
         });
 
