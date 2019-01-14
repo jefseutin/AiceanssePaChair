@@ -13,8 +13,9 @@ export default class CustomMap extends Component {
 
     generateMarkers() {
         return this.props.stations.map(station => {
+            let icon = this.customPin(this.props.selectedStation === station.id ? '#FFEB3B' :'#2196F3')
             return (
-                <Marker key={station.id} position={station.location.coordinates} icon={this.customPin('#2196F3')}>
+                <Marker key={station.id} position={station.location.coordinates} icon={icon}>
                     <Popup>
                         Distance : {station.distance}km
                         <br />

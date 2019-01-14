@@ -8,7 +8,7 @@ export default class ResultTable extends Component {
         let k = 1;
         let rows = this.props.stations.map(station => {
             return (
-                <tr key={k}>
+                <tr key={k} style={{ cursor: 'pointer' }} onClick={e => this.props.setSelectedStation(station.id)}>
                     <th scope="row">{k++}</th>
                     <td>{station.address}<br />{station.city}</td>
                     <td>{station.fuels[this.props.fuel]}€</td>
@@ -21,9 +21,16 @@ export default class ResultTable extends Component {
             );
         });
 
+        var options = {
+            onRowClick: function (row) {
+                console.log(row);
+            }
+        };
+
         return (
             <div>
-                <Table hover striped>
+                <Table hover striped
+                    options={options}>
                     <thead>
                         <tr>
                             <th>#</th>

@@ -17,7 +17,8 @@ export default class Home extends Component {
             loading: true,
             selectedCar: undefined,
             quantity: 0,
-            budget: 0
+            budget: 0,
+            selectedStation: undefined
         };
 
         apiRequest('car/all', 'GET', JSON.parse(sessionStorage.getItem('user'))._id.$oid, response => {
@@ -49,7 +50,7 @@ export default class Home extends Component {
             response.forEach(station => station.location.coordinates.reverse());
             this.sortByKey(response, 'price');
             response.reverse();
-            this.setState({ stations: response }, () => {
+            this.setState({ stations: response, selectedStation: undefined }, () => {
                 this.getDistance(0);
             });
         });
@@ -97,6 +98,10 @@ export default class Home extends Component {
 
     }
 
+    setSelectedStation(stationid) {
+        this.setState({ selectedStation: stationid });
+    }
+
     render() {
 
         return (
@@ -115,7 +120,8 @@ export default class Home extends Component {
                         <ResultTable
                             loading={this.state.loading}
                             stations={this.state.stations}
-                            fuel={this.state.selectedCar && this.state.cars[this.state.selectedCar].fuel} />
+                            fuel={this.state.selectedCar && this.state.cars[this.state.selectedCar].fuel}
+                            setSelectedStation={this.setSelectedStation.bind(this)} />
                     </div>
                     <div className="col-md-4">
 
@@ -184,7 +190,8 @@ export default class Home extends Component {
                             <CustomMap
                                 position={this.state.location}
                                 stations={this.state.stations}
-                                fuel={this.state.selectedCar && this.state.cars[this.state.selectedCar].fuel} />
+                                fuel={this.state.selectedCar && this.state.cars[this.state.selectedCar].fuel}
+                                selectedStation={this.state.selectedStation} />
                         }
                     </div>
                 </div>
