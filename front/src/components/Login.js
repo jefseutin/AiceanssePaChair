@@ -16,10 +16,8 @@ export default class Login extends Component {
         event.preventDefault();
         this.setState({ loading: true });
         apiRequest('user/authenticate', 'POST', event.target, response => {
-            if (response.success === 'false') {
-                this.setState({ fail: true });
-                this.setState({ loading: false });
-            }
+            if (response.success === 'false')
+                this.setState({ fail: true, loading: false });
             else {
                 sessionStorage.setItem("user", JSON.stringify(response));
                 this.props.setLogged(true);

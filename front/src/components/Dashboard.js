@@ -1,32 +1,35 @@
 import React, { Component } from 'react';
-import { InputGroup, InputGroupAddon, InputGroupText, Button, Input, Badge } from 'reactstrap';
+import { InputGroup, InputGroupAddon, InputGroupText, Button, Input, Badge, FormFeedback } from 'reactstrap';
 import { apiRequest } from '../api';
 import CustomMap from './CustomMap';
 import ResultTable from './ResultTable';
 
 
-let state = {
-    location: [],
-    stations: [],
-    cars: [],
-    loading: false,
-    selectedCar: undefined,
-    quantity: 0,
-    budget: 0
-};
-
 export default class Home extends Component {
 
     constructor(props) {
         super(props);
-        this.state = state;
+        const previousState = JSON.parse(sessionStorage.getItem('dashboard_state'));
+        this.state = previousState != null ? previousState : {
+            location: [],
+            stations: [],
+            cars: [],
+            loading: true,
+            selectedCar: undefined,
+            quantity: 0,
+            budget: 0
+        };
+
         apiRequest('car/all', 'GET', JSON.parse(sessionStorage.getItem('user'))._id.$oid, response => {
-            this.setState({ cars: response });
+            this.setState({ cars: response, loading: false });
         });
     }
 
     componentWillUnmount() {
-        state = this.state;
+        if (sessionStorage.getItem('user')) {
+            this.setState({ loading: true });
+            sessionStorage.setItem('dashboard_state', JSON.stringify(this.state));
+        }
     }
 
     componentDidMount(props) {
@@ -122,13 +125,22 @@ export default class Home extends Component {
                             </InputGroupAddon>
                             <Input
                                 type='select'
-                                defaultChecked={-1}
+                                defaultValue={this.state.selectedCar}
                                 onChange={e => this.setState({ selectedCar: e.target.value }, () => {
                                     if (this.state.selectedCar)
                                         this.getNearestStations();
                                     else
                                         this.setState({ stations: [] });
-                                })}>
+                                })}
+
+                                {
+                                ...!this.state.loading &&
+                                (
+                                    (!this.state.selectedCar && this.state.cars.length === 0)
+                                        ? { invalid: true }
+                                        : (!this.state.selectedCar && { valid: true })
+                                )
+                                }>
 
                                 <option value={undefined}></option>
                                 {
@@ -140,6 +152,11 @@ export default class Home extends Component {
                                 }
 
                             </Input>
+                            {
+                                (!this.state.selectedCar && this.state.cars.length === 0)
+                                    ? <FormFeedback>Ajoutez d'abord un bolide</FormFeedback>
+                                    : (!this.state.selectedCar && <FormFeedback valid>Selectionnez un de vos bolides</FormFeedback>)
+                            }
                         </InputGroup>
 
                         <br />

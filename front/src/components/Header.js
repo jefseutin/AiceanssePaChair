@@ -53,8 +53,7 @@ export default class Header extends Component {
                                         }
                                         else
                                             this.setState({ component: 1 });
-                                    }}>
-                                    {loggedIn ? 'Se déconnecter' : 'Connexion'}</NavLink>
+                                    }}>{loggedIn ? 'Se déconnecter' : 'Connexion'}</NavLink>
                             </NavItem>
 
                             {

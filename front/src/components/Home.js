@@ -14,7 +14,7 @@ export default class Home extends Component {
     }
 
     setLogged(value) {
-        this.setState({ loggedIn: value });
+        this.setState({ loggedIn: value, component: 1 });
     }
 
     setComponent(value) {
@@ -29,10 +29,15 @@ export default class Home extends Component {
                     loggedIn={this.state.loggedIn}
                     setComponent={this.setComponent.bind(this)}
                     setLogged={this.setLogged.bind(this)} />
-
                 {
                     this.state.loggedIn &&
-                    (this.state.component === 1 ? <Dashboard /> : <CarManager back={e => this.setState({ component: 1 })} />)
+                    <div>
+                        {
+                            this.state.component === 1
+                                ? <Dashboard />
+                                : <CarManager back={e => this.setState({ component: 1 })} />
+                        }
+                    </div>
                 }
 
             </div>
