@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Projections.*;
+import static com.mongodb.client.model.Sorts.descending;
 
 public class DatabaseRequest {
 
@@ -121,5 +122,9 @@ public class DatabaseRequest {
 
     public String getUserCars(String userID) {
         return documentsToJson(db.getCollection("car").find(eq("userID", userID)));
+    }
+
+    public String getStationsLastDate(){
+        return db.getCollection("info").find().projection(fields(excludeId())).sort(descending("date")).first().toJson();
     }
 }

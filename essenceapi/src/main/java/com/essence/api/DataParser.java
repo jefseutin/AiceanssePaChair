@@ -84,7 +84,7 @@ public class DataParser extends HttpServlet {
                 System.out.println(file.delete());
 
 
-                String currentDate = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(new Date());
+                String currentDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
                 dtb.add("info", new org.bson.Document().append("date", currentDate));
 
             } catch (Exception e) {

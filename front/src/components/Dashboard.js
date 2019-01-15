@@ -18,7 +18,8 @@ export default class Home extends Component {
             selectedCar: undefined,
             quantity: 0,
             budget: 0,
-            selectedStation: undefined
+            selectedStation: undefined,
+            dataDate: undefined
         };
 
         apiRequest('car/all', 'GET', JSON.parse(sessionStorage.getItem('user'))._id.$oid, response => {
@@ -53,6 +54,7 @@ export default class Home extends Component {
             this.setState({ stations: response, selectedStation: undefined }, () => {
                 this.getDistance(0);
             });
+            apiRequest('station/dataDate', 'GET', '', response => { this.setState({ dataDate: response.date }) });
         });
     }
 
@@ -82,9 +84,11 @@ export default class Home extends Component {
 
         this.state.stations.forEach(station => {
             let price = station.fuels[this.state.cars[this.state.selectedCar].fuel];
-            station.tripPrice = Number(carConsumptionKm * station.distance * price).toFixed(2) * 2;
-            station.quantity = (type === 1) ? this.state.quantity : Number((this.state.budget - station.tripPrice) / price).toFixed(2);
+            station.tripConsumption = Number(carConsumptionKm * station.distance).toFixed(2) * 2;
+            station.tripPrice = (station.tripConsumption * price).toFixed(2);
+            station.quantity = (((type === 1) ? this.state.quantity : Number((this.state.budget - station.tripPrice) / price))).toFixed(2);
             station.fullPrice = Number(price * station.quantity).toFixed(2);
+            station.quantity -= station.tripConsumption;
             station.totalCost = Number(Number(station.fullPrice) + Number(station.tripPrice)).toFixed(2);
             if (--k === 0) {
                 if (this.state.stations.length > 1) {
@@ -111,8 +115,12 @@ export default class Home extends Component {
                     {
                         (this.state.selectedCar && this.state.cars.length > 0) &&
                         <div className="row col-md-8">
-                            <h3 className='col-md-6'><Badge pill>Carburant : {this.state.cars[this.state.selectedCar].fuel}</Badge></h3>
-                            <h3 className='col-md-6'><Badge pill>Consommation : {this.state.cars[this.state.selectedCar].consumption} L/100km</Badge></h3>
+                            {
+                                this.state.dataDate &&
+                                <h4 className='col-md-6'><Badge color='primary' pill>Dernière maj des données : {this.state.dataDate}</Badge></h4>
+                            }
+                            <h4 className='col-md-2'><Badge pill>Carburant : {this.state.cars[this.state.selectedCar].fuel}</Badge></h4>
+                            <h4 className='col-md-4'><Badge pill>Consommation : {this.state.cars[this.state.selectedCar].consumption} L/100km</Badge></h4>
                         </div>
                     }
                     <br />
@@ -187,11 +195,14 @@ export default class Home extends Component {
                         </InputGroup> <br />
                         {
                             this.state.location.length > 0 &&
-                            <CustomMap
-                                position={this.state.location}
-                                stations={this.state.stations}
-                                fuel={this.state.selectedCar && this.state.cars[this.state.selectedCar].fuel}
-                                selectedStation={this.state.selectedStation} />
+                            <div>
+                                <p><i>Pour activer le scroll faire un clic sur la map, un autre clic pour désactiver</i></p>
+                                <CustomMap
+                                    position={this.state.location}
+                                    stations={this.state.stations}
+                                    fuel={this.state.selectedCar && this.state.cars[this.state.selectedCar].fuel}
+                                    selectedStation={this.state.selectedStation} />
+                            </div>
                         }
                     </div>
                 </div>

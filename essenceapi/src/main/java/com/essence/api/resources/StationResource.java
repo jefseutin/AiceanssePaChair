@@ -15,4 +15,10 @@ public class StationResource extends Main {
     public String nearestStations(@PathParam("longitude") double longitude, @PathParam("latitude") double latitude, @PathParam("fuel") String fuel) {
         return dtb.getClosestStations(longitude, latitude, fuel);
     }
+
+    @Path("dataDate")
+    @GET
+    public String getStationsUpdateDate(){
+        return dtb.getStationsLastDate();
+    }
 }
