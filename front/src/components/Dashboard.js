@@ -117,10 +117,10 @@ export default class Home extends Component {
                         <div className="row col-md-8">
                             {
                                 this.state.dataDate &&
-                                <h4 className='col-md-6'><Badge color='primary' pill>Dernière maj des données : {this.state.dataDate}</Badge></h4>
+                                <h5 className='col-md-6'><Badge color='primary' pill>Dernière maj des données : {this.state.dataDate}</Badge></h5>
                             }
-                            <h4 className='col-md-2'><Badge pill>Carburant : {this.state.cars[this.state.selectedCar].fuel}</Badge></h4>
-                            <h4 className='col-md-4'><Badge pill>Consommation : {this.state.cars[this.state.selectedCar].consumption} L/100km</Badge></h4>
+                                <h5 className='col-md-2'><Badge pill>Carburant : {this.state.cars[this.state.selectedCar].fuel}</Badge></h5>
+                                <h5 className='col-md-4'><Badge pill>Consommation : {this.state.cars[this.state.selectedCar].consumption} L/100km</Badge></h5>
                         </div>
                     }
                     <br />

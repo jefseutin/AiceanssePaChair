@@ -83,8 +83,10 @@ public class DataParser extends HttpServlet {
                 zipFile.close();
                 System.out.println(file.delete());
 
-
-                String currentDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
+                Calendar c = Calendar.getInstance();
+                c.setTime(new Date());
+                c.add(Calendar.HOUR_OF_DAY, 1);
+                String currentDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(c.getTime());
                 dtb.add("info", new org.bson.Document().append("date", currentDate));
 
             } catch (Exception e) {
