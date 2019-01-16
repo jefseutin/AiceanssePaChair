@@ -12,11 +12,14 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
+import javax.ws.rs.NotAuthorizedException;
+import javax.ws.rs.ServerErrorException;
 import java.util.ArrayList;
 
 import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Projections.*;
 import static com.mongodb.client.model.Sorts.descending;
+import static javax.ws.rs.core.Response.Status.*;
 
 public class DatabaseRequest {
 
@@ -58,14 +61,13 @@ public class DatabaseRequest {
                 String jsonString = mapper.writeValueAsString(obj);
                 documents.add(Document.parse(jsonString));
             }
-
             collection.insertMany(documents);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
     }
 
-    public String add(String collectionName, Object object) {
+    public String add(String collectionName, Object object) throws ServerErrorException {
         try {
             MongoCollection<Document> collection = db.getCollection(collectionName);
             ObjectMapper mapper = new ObjectMapper();
@@ -76,10 +78,10 @@ public class DatabaseRequest {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        return null;
+        throw new ServerErrorException(INTERNAL_SERVER_ERROR);
     }
 
-    public String update(String collectionName, Object object, String id) {
+    public String update(String collectionName, Object object, String id) throws ServerErrorException {
         try {
             MongoCollection<Document> collection = db.getCollection(collectionName);
             ObjectMapper mapper = new ObjectMapper();
@@ -93,22 +95,24 @@ public class DatabaseRequest {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        return null;
+        throw new ServerErrorException(NOT_MODIFIED);
     }
 
-    public String delete(String collectionName, String id) {
+    public void delete(String collectionName, String id) throws ServerErrorException {
         MongoCollection<Document> collection = db.getCollection(collectionName);
         Bson bsonEq = eq("_id", new ObjectId(id));
         if (collection.deleteOne(bsonEq).getDeletedCount() == 1)
-            return status(true);
-        return status(false);
+            return;
+        throw new ServerErrorException(NOT_FOUND);
     }
 
-    public String authenticate(User user) {
+    public String authenticate(User user) throws NotAuthorizedException {
         Document u = db.getCollection("user")
                 .find(and(eq("login", user.getLogin()), eq("password", user.getPassword())))
                 .projection(exclude("password")).first();
-        return u != null ? u.toJson() : status(false);
+        if (u == null)
+            throw new NotAuthorizedException("Bad Credentials");
+        return u.toJson();
     }
 
     public String getClosestStations(double longitude, double latitude, String fuel) {
@@ -124,7 +128,7 @@ public class DatabaseRequest {
         return documentsToJson(db.getCollection("car").find(eq("userID", userID)));
     }
 
-    public String getStationsLastDate(){
+    public String getStationsLastDate() {
         return db.getCollection("info").find().projection(fields(excludeId())).sort(descending("date")).first().toJson();
     }
 }

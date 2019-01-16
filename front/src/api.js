@@ -16,7 +16,9 @@ export const apiRequest = (action, method, data, f) => {
         body = undefined;
         url += '/' + data;
     } else if (data !== null) {
-        if (data instanceof HTMLFormElement) { body = parseFormToJson(data); } else body = data;
+        if (data instanceof HTMLFormElement)
+            body = parseFormToJson(data);
+        else body = data;
     }
 
     fetch(url, {
@@ -26,8 +28,11 @@ export const apiRequest = (action, method, data, f) => {
         method: method,
         body: body
     })
-        .then(response => response.json())
-        .then(d => {
-            f(d);
-        });
+        .then(response => {
+            return (response.ok) ? response.json() : response.status;
+        })
+        .then(response => {
+            f(response);
+        })
+        .catch(error => console.log(error));
 };

@@ -33,8 +33,8 @@ public class CarResource extends Main {
 
     @DELETE
     @Path("{carid}")
-    public String delete(@PathParam("carid") String carid) {
-        return dtb.delete("car", carid);
+    public void delete(@PathParam("carid") String carid) {
+        dtb.delete("car", carid);
     }
 
 }

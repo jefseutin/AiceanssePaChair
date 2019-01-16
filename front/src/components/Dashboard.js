@@ -88,7 +88,7 @@ export default class Home extends Component {
             station.tripPrice = (station.tripConsumption * price).toFixed(2);
             station.quantity = (((type === 1) ? this.state.quantity : Number((this.state.budget - station.tripPrice) / price))).toFixed(2);
             station.fullPrice = Number(price * station.quantity).toFixed(2);
-            station.quantity -= station.tripConsumption;
+            station.quantity = (station.quantity - station.tripConsumption).toFixed(2);
             station.totalCost = Number(Number(station.fullPrice) + Number(station.tripPrice)).toFixed(2);
             if (--k === 0) {
                 if (this.state.stations.length > 1) {
