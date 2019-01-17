@@ -1,17 +1,21 @@
-# AiceanssePaChair
+# AiceanssePaChair API:  
 Ce n'est pas un site d'escroquerie. Pas d'inscription, pas de CB, pas d'arnaque. Notre API proposera un service inédit et unique: elle permettra à l'utilisateur de repérer les stations services ayant le meilleur prix pour sa voiture, et calculera le coup d'un trajet depuis sa position jusqu'à une destination au choix.  
 
-# Collaborateurs
+# Front implémenté utilisant notre API:  
+
+https://jilejone.alwaysdata.net/  
+
+# Collaborateurs:  
 
 SEUTIN Jeffrey, maître de la guilde  
 SOYTURK Okan, serviteur des Ténèbres  
 
-# Techonologies
+# Techonologies:  
 
 **Front-end:** React / HTML5 / JS  
 **Back-end:** Tomcat Java  
-**BDD:** MongoDB, stockage avec MLab  
-**Hébergement:** Heroku
+**BDD:** MongoDB   
+**Hébergement:** Heroku pour le back-end, Alwaysdata pour le front-end, MLab pour la BDD.   
 
 # Jeu de données utilisé:
 
@@ -19,7 +23,9 @@ Prix des carburants, trouvable sur le site https://www.prix-carburants.gouv.fr/r
 
 # API utilisées:
 
-**Google Maps Platform**, Affichage de la position des stations et de l'utilisateur: https://cloud.google.com/maps-platform/?hl=fr  
+**Bing Maps REST Services**, permettant de calculer une distance en voiture entre 2 points: https://docs.microsoft.com/en-us/bingmaps/rest-services/   
+
+**Leaflet**, permettant de représenter des points et un rayon sur une carte: https://leafletjs.com/  
 
 # Rendu du projet:
 
