@@ -23,4 +23,8 @@ Prix des carburants, trouvable sur le site https://www.prix-carburants.gouv.fr/r
 
 # Rendu du projet:
 
-Rendu 17 Janvier 2018, Soutenance 18 Janvier 2018. La documentation de l'API sera faîte sous **Swagger**.
+Rendu 17 Janvier 2018, Soutenance 18 Janvier 2018. La documentation de l'API sera faîte sous **Swagger**.  
+
+# Doc Swagger:
+
+Voici le lien vers notre doc Swagger: https://app.swaggerhub.com/apis/Patatable/AiceanssePaChair/1.0.0-oas3
