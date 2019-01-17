@@ -29,7 +29,7 @@ export const apiRequest = (action, method, data, f) => {
         body: body
     })
         .then(response => {
-            return (response.ok) ? response.json() : response.status;
+            return (response.status === 200) ? response.json() : response.status;
         })
         .then(response => {
             f(response);

@@ -16,7 +16,7 @@ export default class Register extends Component {
         this.setState({ loading: true });
         apiRequest('user', 'POST', event.target, response => {
             this.setState({ loading: false });
-            if (response.success)
+            if (response === 204)
                 this.props.gotoLogin();
         });
     }

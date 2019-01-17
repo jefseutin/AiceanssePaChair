@@ -21,16 +21,9 @@ export default class ResultTable extends Component {
             );
         });
 
-        var options = {
-            onRowClick: function (row) {
-                console.log(row);
-            }
-        };
-
         return (
             <div>
-                <Table hover striped
-                    options={options}>
+                <Table hover striped>
                     <thead>
                         <tr>
                             <th>#</th>

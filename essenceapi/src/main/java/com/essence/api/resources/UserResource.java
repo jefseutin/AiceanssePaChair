@@ -16,8 +16,8 @@ public class UserResource extends Main {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String add(User user) {
-        return DatabaseRequest.status(dtb.add("user", user) != null);
+    public void add(User user) {
+        dtb.add("user", user);
     }
 
     @POST

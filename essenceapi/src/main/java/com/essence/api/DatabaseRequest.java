@@ -33,10 +33,6 @@ public class DatabaseRequest {
         db = mongoClient.getDatabase("essence");*/
     }
 
-    public static String status(boolean success) {
-        return "{\"success\":\"" + success + "\"}";
-    }
-
     public void dropCollection(String collectionName) {
         MongoCollection<Document> collection = db.getCollection(collectionName);
         collection.drop();
